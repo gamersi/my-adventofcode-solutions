@@ -1,0 +1,2 @@
+# My Advent of code solutions
+These are my solutions to the [Advent of Code](https://adventofcode.com/) puzzles. I am writing them in [Python 3.11.0](https://www.python.org/downloads/release/python-3110/). These might not always be the most efficient solutions, but they are the ones I came up with as I do it just for fun.
