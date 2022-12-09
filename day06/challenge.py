@@ -1,4 +1,4 @@
-#https://adventofcode.com/2022/day/5
+#https://adventofcode.com/2022/day/6
 
 #file = open("./easier-input.txt", "r")
 file = open("./input.txt", "r")
