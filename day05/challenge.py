@@ -1,9 +1,5 @@
 #https://adventofcode.com/2022/day/5
 
-file = open("./input.txt", "r")
-data = file.read()
-lines = [line for line in data.split('\n')]
-
 # Part 1
 """
 there are 9 stacks of crates in the ship on the giant cargo crane
@@ -41,76 +37,54 @@ processing outputs:
 output:
 CMP
 """
+import re, copy
 
-"""
-Context in the current example:
-out = [
-'[V]     [B]                     [F]',
-'[N] [Q] [W]                 [R] [B]',
-'[F] [D] [S]     [B]         [L] [P]', 
-'[S] [J] [C]     [F] [C]     [D] [G]', 
-'[M] [M] [H] [L] [P] [N]     [P] [V]', 
-'[P] [L] [D] [C] [T] [Q] [R] [S] [J]', 
-'[H] [R] [Q] [S] [V] [R] [V] [Z] [S]', 
-'[J] [S] [N] [R] [M] [T] [G] [C] [D]', 
-' 1   2   3   4   5   6   7   8   9 ']
+with open('input.txt', 'r') as file:
+    stack_txt, instruction_data = file.read().split('\n\n')
+    stack_txt = stack_txt.split('\n')
+    instruction_data = instruction_data.split('\n')
 
-out2 = {
-    1: ['V', 'N', 'F', 'S', 'M', 'P', 'H', 'J'],
-    2: ['Q', 'D', 'J', 'M', 'L', 'R', 'S'],
-    3: ['B', 'W', 'S', 'C', 'H', 'D', 'Q', 'N'],
-    4: ['L', 'C', 'S', 'R'],
-    5: ['B', 'F', 'P', 'T', 'V', 'M'],
-    6: ['C', 'N', 'Q', 'R', 'T'],
-    7: ['R', 'V', 'G'],
-    8: ['R', 'L', 'D', 'P', 'S', 'Z', 'C'],
-    9: ['F', 'B', 'P', 'G', 'V', 'J', 'S', 'D']
-}"""
+stack_last = stack_txt.pop()
+
+# Stack processing
+
+stack = {}
+loc = {}
+ordering = []
+for ii in range(len(stack_last)):
+    if stack_last[ii] != ' ':
+        stack[stack_last[ii]] = []
+        loc[stack_last[ii]] = ii
+        ordering.append(stack_last[ii])
+
+for line in reversed(stack_txt):
+    for key in loc.keys():
+        if line[loc[key]] != ' ':
+            stack[key].append(line[loc[key]])
+
+stack2 = copy.deepcopy(stack)
 
 
-def part1():
-    rawStacks = []
-    switchingPoint = False
-    instructions = []
-    for line in lines:
-        if line == '':
-            switchingPoint = True
-            continue
-        if(switchingPoint):
-            instructions.append(line)
-        else:
-            rawStacks.append(line)
+# Instruction processing
+for line in instruction_data:
+    if 'move' in line:
+        inst_values = re.findall(r'(\d+)', line)
+        count = int(inst_values[0])
+        ff = inst_values[1]
+        tt = inst_values[2]
 
-    formattedStacks = {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: [],
-        7: [],
-        8: [],
-        9: []
-    }
-    print(len(rawStacks))
-    for i in range(len(rawStacks) - 1):
-        index: int = 0
-        j = 0
-        while j <= len(rawStacks[i]) - 1:
-            # print(index, rawStacks[i][j])
-            if rawStacks[i][j] == '[':
-                print(index, rawStacks[i][j+1])
-                formattedStacks[index].append(rawStacks[i][j+1])
-                index += 1
-            elif rawStacks[i][j] == ' ' and rawStacks[i][j+1] == ' ' and rawStacks[i][j+2] == ' ' and rawStacks[i][j+3] == ' ' and rawStacks[i][j+4] == ' ':
-                print("skipped")
-                j = j+4
-                index += 1
-            else:
-                j+=1
-                continue
-            j+=1
-    return formattedStacks
+        for ii in range(count):
+            pop_val = stack[ff].pop()
+            stack[tt].append(pop_val)
 
-print("Part 1:", part1())
+        stack2[tt] += stack2[ff][-count:]
+        stack2[ff] = stack2[ff][:-count]
+
+print('The answer for the first part is:')
+for ii in ordering:
+    print(stack[ii][-1], end = '')
+print()
+
+print('The answer for the second part is:')
+for ii in ordering:
+    print(stack2[ii][-1], end = '')
