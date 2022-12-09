@@ -2,6 +2,7 @@
 
 # Part 1
 """
+Credits to studying-asyouwere for helping me!
 there are 9 stacks of crates in the ship on the giant cargo crane
 each crate has a assigned letter
 they are in the first few lines of the input file before the empty line and the instructions
