@@ -1,0 +1,36 @@
+{
+    "!AoC":{
+        "prefix": "aoc",
+        "body": [
+            "# https://adventofcode.com/2022/day/${1:day}",
+            "",
+            "file = open(\"./easier-input.txt\", \"r\")",
+            "# file = open(\"./input.txt\", \"r\")",
+            "lines = file.readlines()",
+            "lines = [line.split() for line in lines]",
+            "",
+            "# Part 1",
+            "\"\"\"",
+            "${2:Part 1 description}",
+            "\"\"\"",
+            "",
+            "def part1():",
+            "\t# ${3:code}",
+            "\treturn 0 # ${4:solution}",
+            "",
+            "print(\"Part 1:\", part1())",
+            "",
+            "# Part 2",
+            "\"\"\"",
+            "${7:Part 2 description}",
+            "\"\"\"",
+            "",
+            "def part2():",
+            "\t# ${5:code part2}",
+            "\treturn 0 # ${6:solution part2}",
+            "",
+            "print(\"Part 2:\", part2())"
+        ],
+        "description": "Advent of Code template"
+    }
+}
