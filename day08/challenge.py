@@ -65,6 +65,7 @@ def part1():
     return count
 print("Part 1:", part1())
 
+# Part 2
 def part2():
     highestScore = 0
     totalScore = 0
