@@ -5,7 +5,7 @@ import os
 file = open("./input.txt", "r")
 data = file.read().strip().split("\n")
 subdirs = {}
-directDirSizes = {}
+dirSizes = {}
 
 # Part 1
 """
@@ -28,33 +28,31 @@ The output should be a list of directories, which sizes are at most 100000.
 
 for line in data:
     if line[0] == '$':
-        ds, cmd, *ddir = line.split()
+        
+        _, cmd, *directory = line.split() # _ is the $ sign. it tells python to ignore it and not store it
         if cmd == 'cd':
-            path = ddir[0]
+            path = directory[0]
             if path == '/':
-                curdir = path
+                curentDir = path
             else:
-                curdir = os.path.normpath(os.path.join(curdir, path))
-            if curdir not in subdirs:
-                subdirs[curdir] = []
-                directDirSizes[curdir] = 0
+                curentDir = os.path.normpath(os.path.join(curentDir, path))
+            if curentDir not in subdirs:
+                subdirs[curentDir] = []
+                dirSizes[curentDir] = 0
 
     else:
-        fsize, fname = line.split()
-        if fsize != 'dir':
-            directDirSizes[curdir] += int(fsize)
+        fileSize, fileName = line.split()
+        if fileSize != 'dir':
+            dirSizes[curentDir] += int(fileSize)
         else:
-            subdirs[curdir].append(os.path.normpath(os.path.join(curdir, fname)))
+            subdirs[curentDir].append(os.path.normpath(os.path.join(curentDir, fileName)))
 
-def computeSize(dirname: str):
-    dirsize = directDirSizes[dirname]
+def computeSize(dirname):
+    dirsize = dirSizes[dirname]
     for i in subdirs[dirname]:
         if i in subdirs:
             dirsize += computeSize(i)
     return dirsize
-
-# print(subdirs)
-# print(directDirSizes)
 
 solution1 = 0
 for i in subdirs:
@@ -75,7 +73,7 @@ spaceRequired = 30000000
 spaceUsed = computeSize('/')
 
 deleteDir = totalSpace
-for i in directDirSizes:
+for i in dirSizes:
     dirSize = computeSize(i)
     if dirSize >= spaceRequired - (totalSpace - spaceUsed) and dirSize <= deleteDir:
         deleteDir = dirSize

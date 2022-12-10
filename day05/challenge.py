@@ -38,54 +38,54 @@ processing outputs:
 output:
 CMP
 """
-import re, copy
+import re, copy # re is needed for regex, copy is needed for deepcopy. both are in the standard library
 
 with open('input.txt', 'r') as file:
-    stack_txt, instruction_data = file.read().split('\n\n')
-    stack_txt = stack_txt.split('\n')
-    instruction_data = instruction_data.split('\n')
+    stackUnparsed, instructionData = file.read().split('\n\n')
+    stackUnparsed = stackUnparsed.split('\n')
+    instructionData = instructionData.split('\n')
 
-stack_last = stack_txt.pop()
+stackLast = stackUnparsed.pop() # last line of the stack
 
 # Stack processing
 
 stack = {}
 loc = {}
 ordering = []
-for ii in range(len(stack_last)):
-    if stack_last[ii] != ' ':
-        stack[stack_last[ii]] = []
-        loc[stack_last[ii]] = ii
-        ordering.append(stack_last[ii])
+for i in range(len(stackLast)):
+    if stackLast[i] != ' ':
+        stack[stackLast[i]] = []
+        loc[stackLast[i]] = i
+        ordering.append(stackLast[i])
 
-for line in reversed(stack_txt):
+for line in reversed(stackUnparsed):
     for key in loc.keys():
         if line[loc[key]] != ' ':
             stack[key].append(line[loc[key]])
 
-stack2 = copy.deepcopy(stack)
+stack2 = copy.deepcopy(stack) # for part 2. deepcopy is needed to prevent the same list being used
 
 
 # Instruction processing
-for line in instruction_data:
+for line in instructionData:
     if 'move' in line:
-        inst_values = re.findall(r'(\d+)', line)
-        count = int(inst_values[0])
-        ff = inst_values[1]
-        tt = inst_values[2]
+        instructionValues = re.findall(r'(\d+)', line)
+        count = int(instructionValues[0])
+        fromStack = instructionValues[1]
+        toStack = instructionValues[2]
 
-        for ii in range(count):
-            pop_val = stack[ff].pop()
-            stack[tt].append(pop_val)
+        for i in range(count):
+            lastVal = stack[fromStack].pop()
+            stack[toStack].append(lastVal)
 
-        stack2[tt] += stack2[ff][-count:]
-        stack2[ff] = stack2[ff][:-count]
+        stack2[toStack] += stack2[fromStack][-count:]
+        stack2[fromStack] = stack2[fromStack][:-count]
 
 print('The answer for the first part is:')
-for ii in ordering:
-    print(stack[ii][-1], end = '')
+for i in ordering:
+    print(stack[i][-1], end = '')
 print()
 
 print('The answer for the second part is:')
-for ii in ordering:
-    print(stack2[ii][-1], end = '')
+for i in ordering:
+    print(stack2[i][-1], end = '')
